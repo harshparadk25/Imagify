@@ -11,7 +11,7 @@ const AppContextProvider = (props) =>{
     const [token, setToken] = useState(localStorage.getItem('token') || null);
     const navigate = useNavigate();
 
-    const backendURL =  import.meta.env.PRODUCTION || 'http://localhost:3000';
+    const backendURL =  import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
     const loadCreditsData = async ()=>{
         try {
