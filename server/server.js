@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -12,14 +11,7 @@ import paypalRouter from './routes/paypal.js';
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.use(cors({
-  origin: [
-    'http://localhost:5173'
-  ],
-}));
-
-app.options('*', cors());
-
+app.use(cors({ origin: 'http://localhost:5173' }));
 app.use(express.json());
 
 app.use('/api/users', router);
@@ -27,11 +19,7 @@ app.use('/api/images', imageRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/paypal', paypalRouter);
 app.get('/', (req, res) => res.send('Hello, World!'));
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK' });
-});
-
-
+app.get('/health', (_, res) => res.send({ status: 'OK' }));
 const start = async () => {
   try {
     await connect(); 
