@@ -12,8 +12,18 @@ import paypalRouter from './routes/paypal.js';
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-app.use(cors({ origin: ['http://localhost:5173',
-  process.env.FRONTEND_URL] })) ;
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    process.env.FRONTEND_URL
+  ],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
+
+app.options('*', cors());
+
 app.use(express.json());
 
 app.use('/api/users', router);
