@@ -2,10 +2,13 @@ import React, { useContext } from "react";
 import { assets, plans } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "framer-motion";
-import axios from "axios";
+import api from "../services/api";
 import { toast } from "sonner";
 
 const BuyCredit = () => {
+
+  
+  
   const { user, token, backendURL, loadCreditsData } =
     useContext(AppContext);
 
@@ -21,8 +24,8 @@ const BuyCredit = () => {
   window.paypal
     .Buttons({
       createOrder: async () => {
-        const { data } = await axios.post(
-          `${backendURL}/api/paypal/create-order`,
+        const { data } = await api.post(
+          "/api/paypal/create-order",
           { planId },
           {
             headers: {

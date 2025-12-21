@@ -28,7 +28,7 @@ export const registerUser = async (req, res) => {
     await newUser.save();
 
     const token = jwt.sign(
-      { userId: newUser._id },
+      { id: newUser._id },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
@@ -74,7 +74,7 @@ export const loginUser = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id },
+      { id: user._id },
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );

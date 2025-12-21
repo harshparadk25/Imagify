@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import { AppContext } from "../context/AppContext";
 import { motion } from "framer-motion";
-import axios from "axios";
+import api from "../services/api";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -17,7 +17,7 @@ const Login = () => {
     e.preventDefault();
     try {
       if (state === 'Login') {
-        const { data } = await axios.post(`${backendURL}/api/users/login`, {
+        const { data } = await api.post("/api/users/login", {
           email,
           password,
         });
@@ -34,7 +34,7 @@ const Login = () => {
         }
       }
       else {
-        const { data } = await axios.post(`${backendURL}/api/users/register`, {
+        const { data } = await api.post("/api/users/register", {
           name,
           email,
           password,

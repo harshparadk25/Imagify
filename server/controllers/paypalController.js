@@ -17,13 +17,15 @@ export const createOrder = async(req,res)=>{
             {
                 intent: 'CAPTURE',
                 purchase_units: [
-                    {
-                        amount: {
-                            currency_code: 'USD',
-                            value: (plan.price / 100).toFixed(2)
-                        }
-                    }
-                ]
+  {
+    amount: {
+      currency_code: 'USD',
+      value: (plan.price / 100).toFixed(2)
+    },
+    custom_id: plan.id
+  }
+]
+
             },
             {
                 headers: {
@@ -56,6 +58,17 @@ export const captureOrder = async(req,res)=>{
                 }
             }
         );
+
+        const purchasedPlanId =
+  captureData.data.purchase_units[0].custom_id;
+
+if (purchasedPlanId !== planId) {
+  return res.status(400).json({
+    success: false,
+    message: "Plan mismatch detected"
+  });
+}
+
         if (captureData.data.status !== "COMPLETED") {
       return res.status(400).json({ success: false, message: "Payment not completed" });
     }

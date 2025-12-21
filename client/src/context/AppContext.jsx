@@ -1,7 +1,7 @@
 import {createContext, useState} from 'react';
 import {toast} from 'sonner';
 export const AppContext = createContext();
-import axios from 'axios';
+import api from '../services/api';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -15,7 +15,7 @@ const AppContextProvider = (props) =>{
 
     const loadCreditsData = async ()=>{
         try {
-            const {data} =await axios.get(`${backendURL}/api/users/credits`, {
+            const {data} =await api.get("/api/users/credits", {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -31,7 +31,7 @@ const AppContextProvider = (props) =>{
 
     const generateImage = async (prompt)=>{
         try {
-            const {data} = await axios.post(`${backendURL}/api/images/generate-image`, {
+            const {data} = await api.post("/api/images/generate-image", {
                 prompt
             },{
                 headers: {  
@@ -62,11 +62,18 @@ const AppContextProvider = (props) =>{
         toast.success('Logged out successfully!');
     }
 
-    useEffect(()=>{
-        if(token){
-            loadCreditsData();
-        }
-    },[token]);
+    useEffect(() => {
+  if (token) {
+    loadCreditsData();
+  } else {
+    setUser(null);
+  }
+}, []);
+
+useEffect(() => {
+  if (token) loadCreditsData();
+}, [token]);
+
 
     const value = {
         user,

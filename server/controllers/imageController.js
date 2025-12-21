@@ -1,11 +1,9 @@
-
 import FormData from "form-data";
 import axios from "axios";
 import User from "../model/userModel.js";
 
 export const generateImage = async (req, res) => {
   try {
-    
     const userId = req.user?.id;
     const { prompt } = req.body;
 
@@ -17,20 +15,20 @@ export const generateImage = async (req, res) => {
       return res.status(400).json({ error: "Prompt is required" });
     }
 
-    
-    const user = await User.findById(userId);
+    // ✅ ATOMIC CREDIT CHECK + DEDUCTION
+    const user = await User.findOneAndUpdate(
+      { _id: userId, creditBalance: { $gt: 0 } },
+      { $inc: { creditBalance: -1 } },
+      { new: true }
+    );
+
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.json({
+        success: false,
+        message: "Insufficient image credits",
+        creditsLeft: 0,
+      });
     }
-
-   if (!user.creditBalance || user.creditBalance <= 0) {
-  return res.json({
-    success: false,
-    message: "Insufficient image credits",
-    creditsLeft: user.creditBalance || 0,
-  });
-}
-
 
     const formData = new FormData();
     formData.append("prompt", prompt);
@@ -40,27 +38,21 @@ export const generateImage = async (req, res) => {
       formData,
       {
         headers: {
-          ...formData.getHeaders(),       
+          ...formData.getHeaders(),
           "x-api-key": process.env.CLIPDROP,
         },
         responseType: "arraybuffer",
+        timeout: 30000,
       }
     );
 
     const base64Image = Buffer.from(data, "binary").toString("base64");
     const resultImage = `data:image/png;base64,${base64Image}`;
 
-    
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $inc: { creditBalance: -1 } },
-      { new: true }
-    );
-
     return res.json({
       success: true,
       image: resultImage,
-      creditsLeft: updatedUser.creditBalance,
+      creditsLeft: user.creditBalance,
     });
   } catch (error) {
     console.error("Error generating image:", error);

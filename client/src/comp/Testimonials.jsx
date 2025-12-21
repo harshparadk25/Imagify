@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { assets, testimonialsData } from '../assets/assets';
 import { motion } from 'framer-motion';
 import { toast } from 'sonner';
-import axios from 'axios';
+import api from '../services/api';
 import { AppContext } from '../context/AppContext';
 
 const Testimonials = () => {
@@ -28,7 +28,7 @@ const Testimonials = () => {
   const fetchComments = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${backendURL}/api/comments`, {
+      const { data } = await api.get("/api/comments", {
         headers: authHeaders()
       });
 
