@@ -31,7 +31,7 @@ export const createOrder = async(req,res)=>{
                 }
             }
         );
-        res.json({success:true, orderId: orderData.data.id});
+        res.json({success:true, orderId: orderData.data.id,planId:plan.id});
     } catch (error) {
         console.error("Error creating PayPal order:", error);
         res.status(500).json({success:false, message:'Internal Server Error'});

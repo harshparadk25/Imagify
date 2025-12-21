@@ -14,8 +14,7 @@ const app = express();
 
 app.use(cors({
   origin: [
-    'http://localhost:5173',
-    process.env.FRONTEND_URL
+    'http://localhost:5173'
   ],
 }));
 
@@ -28,6 +27,10 @@ app.use('/api/images', imageRouter);
 app.use('/api/comments', commentRouter);
 app.use('/api/paypal', paypalRouter);
 app.get('/', (req, res) => res.send('Hello, World!'));
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
+
 
 const start = async () => {
   try {
