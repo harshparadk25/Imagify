@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(cors({ origin: ['http://localhost:5173',
-  process.env.PRODUCTION] })) ;
+  process.env.FRONTEND_URL] })) ;
 app.use(express.json());
 
 app.use('/api/users', router);
