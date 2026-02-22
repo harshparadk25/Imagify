@@ -9,7 +9,7 @@ const BuyCredit = () => {
 
   
   
-  const { user, token, backendURL, loadCreditsData } =
+  const { user, loadCreditsData } =
     useContext(AppContext);
 
   const buyPlan = async (planId) => {
@@ -26,28 +26,18 @@ const BuyCredit = () => {
       createOrder: async () => {
         const { data } = await api.post(
           "/api/paypal/create-order",
-          { planId },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { planId }
         );
 
         return data.orderId;
       },
 
       onApprove: async (data) => {
-        await axios.post(
-          `${backendURL}/api/paypal/capture-order`,
+        await api.post(
+          "/api/paypal/capture-order",
           {
             orderId: data.orderID,
             planId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
           }
         );
 
